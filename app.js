@@ -106,7 +106,7 @@ function renderControls() {
     <div class="icon-btns">
       ${audioBtn}
       <button class="icon-btn" id="btn-theme" title="Toggle theme" aria-label="Toggle colour theme">${getResolvedTheme() === 'dark' ? '🌛' : '🌞'}</button>
-      <button class="icon-btn${state.bellPopupOpen ? ' active' : ''}" id="btn-bell" title="Set reminders" aria-label="Set bell reminders">${state.bellPopupOpen ? '🔔' : '🔕'}</button>
+      <button class="icon-btn${state.bellPopupOpen ? ' active' : ''}" id="btn-bell" title="Set reminders" aria-label="Set bell reminders">${getSchedule().enabled ? '🔔' : '🔕'}</button>
     </div>
   `;
   const modeTabs = Array.from(el.querySelectorAll('.mode-tab'));
