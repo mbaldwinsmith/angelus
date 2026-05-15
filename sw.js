@@ -1,6 +1,6 @@
 // sw.js — Service Worker for offline support
 
-const CACHE = 'angelus-v1';
+const CACHE = 'angelus-v2';
 const ASSETS = [
   './',
   './index.html',

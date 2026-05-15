@@ -1,7 +1,7 @@
 // app.js — Main application module (no build, vanilla ES modules)
 import { angelus, reginaCoeli, isEastertide, PRAYER_MODES } from './prayers.js';
 import { recordPrayer, getStreak, hasPrayedToday } from './streaks.js';
-import { requestPermission, getPermission, getSchedule, saveSchedule, scheduleSessionAlarms } from './notifications.js';
+import { requestPermission, getPermission, getSchedule, saveSchedule, scheduleSessionAlarms, clearTimers } from './notifications.js';
 import { speak, speakLatin, stop, isSupported as audioSupported, isSpeaking } from './audio.js';
 
 // ── State ──────────────────────────────────────────
@@ -25,13 +25,18 @@ function init() {
   renderPrayer();
   renderStreak();
   renderPanel();
-  state.timers = scheduleSessionAlarms((h) => {
-    renderHeader(); // refresh time badge
-  });
+  refreshNotificationTimers();
   // Service worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
+}
+
+function refreshNotificationTimers() {
+  clearTimers(state.timers);
+  state.timers = scheduleSessionAlarms(() => {
+    renderHeader(); // refresh time badge
+  });
 }
 
 // ── Theme ──────────────────────────────────────────
@@ -215,6 +220,13 @@ function renderPanel() {
   const schedule = getSchedule();
   const perm = getPermission();
   const notifSupported = 'Notification' in window;
+  const selectedHours = Array.isArray(schedule.hours) ? schedule.hours : [6, 12, 18];
+  const notificationsOn = schedule.enabled && selectedHours.length > 0;
+  const bellOptions = [
+    { hour: 6, label: '6am' },
+    { hour: 12, label: '12pm' },
+    { hour: 18, label: '6pm' }
+  ];
 
   overlay.innerHTML = `
     <div class="panel" role="dialog" aria-modal="true" aria-label="Settings">
@@ -233,27 +245,25 @@ function renderPanel() {
       </div>
 
       ${notifSupported ? `
-      <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:0.6rem">
-        <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+      <div class="setting-row notification-setting">
+        <div class="setting-row-main">
           <div>
             <div class="setting-label">Bell Notifications</div>
-            <div class="setting-sublabel">${perm === 'denied' ? 'Blocked in browser settings' : '6am · 12pm · 6pm'}</div>
+            <div class="setting-sublabel">${perm === 'denied' ? 'Blocked in browser settings' : notificationsOn ? 'Choose one or more times' : 'Off'}</div>
           </div>
           <label class="toggle" aria-label="Enable notifications">
-            <input type="checkbox" id="notif-toggle" ${schedule.enabled ? 'checked' : ''} ${perm === 'denied' ? 'disabled' : ''}>
+            <input type="checkbox" id="notif-toggle" ${notificationsOn ? 'checked' : ''} ${perm === 'denied' ? 'disabled' : ''}>
             <span class="toggle-track"></span>
           </label>
         </div>
-        ${schedule.enabled ? `
         <div class="bell-checks">
-          ${[6,12,18].map(h => {
-            const label = h === 6 ? '6am' : h === 12 ? '12pm' : '6pm';
+          ${bellOptions.map(({ hour, label }) => {
             return `<label class="bell-check">
-              <input type="checkbox" data-hour="${h}" class="bell-hour" ${schedule.hours.includes(h) ? 'checked' : ''}>
+              <input type="checkbox" data-hour="${hour}" class="bell-hour" ${notificationsOn && selectedHours.includes(hour) ? 'checked' : ''} ${perm === 'denied' ? 'disabled' : ''}>
               ${label}
             </label>`;
           }).join('')}
-        </div>` : ''}
+        </div>
       </div>` : ''}
 
       <div class="setting-row">
@@ -278,18 +288,29 @@ function renderPanel() {
       if (e.target.checked) {
         const result = await requestPermission();
         if (result !== 'granted') { e.target.checked = false; return; }
-        saveSchedule({ enabled: true, hours: schedule.hours.length ? schedule.hours : [6,12,18] });
+        saveSchedule({ enabled: true, hours: selectedHours.length ? selectedHours : [6,12,18] });
       } else {
-        saveSchedule({ ...schedule, enabled: false });
+        saveSchedule({ ...schedule, enabled: false, hours: selectedHours });
       }
+      refreshNotificationTimers();
       renderPanel();
     });
   }
 
   document.querySelectorAll('.bell-hour').forEach(cb => {
-    cb.addEventListener('change', () => {
+    cb.addEventListener('change', async e => {
+      if (e.target.checked) {
+        const result = await requestPermission();
+        if (result !== 'granted') {
+          e.target.checked = false;
+          renderPanel();
+          return;
+        }
+      }
       const checked = [...document.querySelectorAll('.bell-hour:checked')].map(c => parseInt(c.dataset.hour));
-      saveSchedule({ ...schedule, hours: checked });
+      saveSchedule({ enabled: checked.length > 0, hours: checked });
+      refreshNotificationTimers();
+      renderPanel();
     });
   });
 }

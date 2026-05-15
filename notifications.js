@@ -17,7 +17,12 @@ export function getPermission() {
 
 export function getSchedule() {
   try {
-    return JSON.parse(localStorage.getItem('angelus_notif')) || { enabled: false, hours: [...BELL_HOURS] };
+    const schedule = JSON.parse(localStorage.getItem('angelus_notif'));
+    if (!schedule) return { enabled: false, hours: [...BELL_HOURS] };
+    const hours = Array.isArray(schedule.hours)
+      ? schedule.hours.filter(hour => BELL_HOURS.includes(hour))
+      : [...BELL_HOURS];
+    return { enabled: Boolean(schedule.enabled), hours };
   } catch { return { enabled: false, hours: [...BELL_HOURS] }; }
 }
 
@@ -29,9 +34,9 @@ export function saveSchedule(schedule) {
 export function scheduleSessionAlarms(onBell) {
   const schedule = getSchedule();
   if (!schedule.enabled) return [];
-  const now = new Date();
   const timers = [];
-  for (const hour of schedule.hours) {
+  const scheduleHour = hour => {
+    const now = new Date();
     const next = new Date();
     next.setHours(hour, 0, 0, 0);
     if (next <= now) next.setDate(next.getDate() + 1);
@@ -39,9 +44,11 @@ export function scheduleSessionAlarms(onBell) {
     const id = setTimeout(() => {
       showNotification(hour);
       if (onBell) onBell(hour);
+      scheduleHour(hour);
     }, ms);
     timers.push(id);
-  }
+  };
+  schedule.hours.forEach(scheduleHour);
   return timers;
 }
 
@@ -53,7 +60,7 @@ export function showNotification(hour) {
     body: 'The angel of the Lord declared unto Mary…',
     icon: './icons/icon-192.png',
     badge: './icons/badge-72.png',
-    tag: 'angelus-bell',
+    tag: `angelus-bell-${hour}`,
     renotify: true,
     silent: false
   });
