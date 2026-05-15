@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"c:\\\\Users\\\\ecoch\\\\OneDrive\\\\Documents\\\\Dev\\\\JavaScript\\\\angelus\" push origin main)",
+      "Bash(git -C \"c:\\\\Users\\\\ecoch\\\\OneDrive\\\\Documents\\\\Dev\\\\JavaScript\\\\angelus\" add app.js style.css)",
+      "Bash(git -C 'c:\\\\Users\\\\ecoch\\\\OneDrive\\\\Documents\\\\Dev\\\\JavaScript\\\\angelus' commit -m ' *)"
+    ]
+  }
+}
