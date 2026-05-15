@@ -388,70 +388,32 @@ h1 {
   font-size: 0.9rem;
 }
 
-/* ── Settings panel ──────────────────────────────── */
-.panel-overlay {
+/* ── Bell popup ──────────────────────────────────── */
+.bell-popup {
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 100;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-  backdrop-filter: blur(2px);
-}
-.panel-overlay.open { opacity: 1; pointer-events: all; }
-
-.panel {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) translateY(100%);
-  width: 100%;
-  max-width: var(--max-w);
+  z-index: 50;
   background: var(--bg2);
-  border-top: 1px solid var(--border);
-  border-radius: 12px 12px 0 0;
-  padding: 1.5rem 1.5rem 2.5rem;
-  z-index: 101;
-  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-}
-.panel-overlay.open .panel { transform: translateX(-50%) translateY(0); }
-
-.panel-handle {
-  width: 2.5rem;
-  height: 3px;
-  background: var(--border);
-  border-radius: 2px;
-  margin: 0 auto 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  width: 220px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  animation: fadeIn 0.15s ease;
 }
 
-.panel h2 {
+.bell-popup-title {
   font-family: 'IM Fell English SC', Georgia, serif;
-  font-size: 1rem;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
   color: var(--gold);
-  margin-bottom: 1.25rem;
-  font-weight: 400;
+  margin-bottom: 0.75rem;
 }
 
-.setting-row {
+.bell-popup-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--border);
-}
-.setting-row:last-child { border-bottom: none; }
-.notification-setting {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.65rem;
-}
-.setting-row-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+  margin-bottom: 0.65rem;
 }
 
 .setting-label {
@@ -496,17 +458,6 @@ h1 {
 .toggle input:checked + .toggle-track::after {
   transform: translate(1.1rem, -50%);
   background: var(--gold);
-}
-
-.theme-select, .notif-select {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-mid);
-  font-family: 'IM Fell English', Georgia, serif;
-  font-size: 0.82rem;
-  padding: 0.3rem 0.5rem;
-  border-radius: var(--radius);
-  cursor: pointer;
 }
 
 .bell-checks {

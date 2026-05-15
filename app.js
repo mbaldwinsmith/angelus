@@ -9,7 +9,7 @@ import { getIntention, saveIntention, pruneIntentions } from './intentions.js';
 const state = {
   mode: localStorage.getItem('angelus_mode') || 'traditional',
   theme: localStorage.getItem('angelus_theme') || 'system',
-  panelOpen: false,
+  bellPopupOpen: false,
   audioOn: false,
   timers: [],
   calendarOpen: false,
@@ -21,9 +21,9 @@ const state = {
 const $ = id => document.getElementById(id);
 const app = $('app');
 
-// ── Panel focus management ─────────────────────────
-let _panelTrapHandler = null;
-let _panelPrevFocus = null;
+// ── Bell popup management ──────────────────────────
+let _bellCloseHandler = null;
+let _bellKeyHandler = null;
 
 // ── Init ───────────────────────────────────────────
 function init() {
@@ -35,7 +35,6 @@ function init() {
   renderIntention();
   renderStreak();
   renderCalendar();
-  renderPanel();
   refreshNotificationTimers();
   // Service worker
   if ('serviceWorker' in navigator) {
@@ -58,6 +57,19 @@ function applyTheme(theme) {
   } else {
     root.setAttribute('data-theme', theme);
   }
+}
+
+function getResolvedTheme() {
+  if (state.theme === 'light') return 'light';
+  if (state.theme === 'dark') return 'dark';
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+
+function toggleTheme() {
+  state.theme = getResolvedTheme() === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('angelus_theme', state.theme);
+  applyTheme(state.theme);
+  renderControls();
 }
 
 // ── Header ─────────────────────────────────────────
@@ -93,7 +105,8 @@ function renderControls() {
     </div>
     <div class="icon-btns">
       ${audioBtn}
-      <button class="icon-btn" id="btn-settings" title="Settings" aria-label="Open settings">⚙</button>
+      <button class="icon-btn" id="btn-theme" title="Toggle theme" aria-label="Toggle colour theme">${getResolvedTheme() === 'dark' ? '☽' : '☀'}</button>
+      <button class="icon-btn${state.bellPopupOpen ? ' active' : ''}" id="btn-bell" title="Set reminders" aria-label="Set bell reminders">🔔</button>
     </div>
   `;
   const modeTabs = Array.from(el.querySelectorAll('.mode-tab'));
@@ -111,7 +124,8 @@ function renderControls() {
   });
   const audioEl = $('btn-audio');
   if (audioEl) audioEl.addEventListener('click', toggleAudio);
-  $('btn-settings').addEventListener('click', openPanel);
+  $('btn-theme').addEventListener('click', toggleTheme);
+  $('btn-bell').addEventListener('click', toggleBellPopup);
 }
 
 // ── Prayer renderer ────────────────────────────────
@@ -345,144 +359,99 @@ function renderCalendar() {
   });
 }
 
-// ── Settings panel ─────────────────────────────────
-function renderPanel() {
-  let overlay = $('panel-overlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = 'panel-overlay';
-    overlay.className = 'panel-overlay';
-    document.body.appendChild(overlay);
-    overlay.addEventListener('click', e => { if (e.target === overlay) closePanel(); });
-  }
+// ── Bell popup ─────────────────────────────────────
+function toggleBellPopup() {
+  if (state.bellPopupOpen) { closeBellPopup(); return; }
+  state.bellPopupOpen = true;
+  renderControls();
+  renderBellPopup();
+  _bellKeyHandler = e => { if (e.key === 'Escape') closeBellPopup(); };
+  _bellCloseHandler = e => {
+    const popup = $('bell-popup');
+    const btn = $('btn-bell');
+    if (popup && !popup.contains(e.target) && btn && !btn.contains(e.target)) closeBellPopup();
+  };
+  document.addEventListener('keydown', _bellKeyHandler);
+  setTimeout(() => document.addEventListener('click', _bellCloseHandler), 0);
+}
 
+function closeBellPopup() {
+  state.bellPopupOpen = false;
+  const popup = $('bell-popup');
+  if (popup) popup.remove();
+  if (_bellKeyHandler)   { document.removeEventListener('keydown', _bellKeyHandler);   _bellKeyHandler = null; }
+  if (_bellCloseHandler) { document.removeEventListener('click',   _bellCloseHandler); _bellCloseHandler = null; }
+  renderControls();
+}
+
+function renderBellPopup() {
+  if (!('Notification' in window)) return;
+  let popup = $('bell-popup');
+  if (!popup) {
+    popup = document.createElement('div');
+    popup.id = 'bell-popup';
+    popup.className = 'bell-popup';
+    popup.setAttribute('role', 'dialog');
+    popup.setAttribute('aria-label', 'Bell reminder settings');
+    document.body.appendChild(popup);
+  }
+  const ctrl = $('controls-bar');
+  if (ctrl) {
+    const rect = ctrl.getBoundingClientRect();
+    popup.style.top = `${rect.bottom + 6}px`;
+    popup.style.right = `${window.innerWidth - rect.right}px`;
+  }
   const schedule = getSchedule();
   const perm = getPermission();
-  const notifSupported = 'Notification' in window;
   const selectedHours = Array.isArray(schedule.hours) ? schedule.hours : [6, 12, 18];
   const notificationsOn = schedule.enabled && selectedHours.length > 0;
-  const bellOptions = [
-    { hour: 6, label: '6am' },
-    { hour: 12, label: '12pm' },
-    { hour: 18, label: '6pm' }
-  ];
+  const bellOptions = [{ hour: 6, label: '6am' }, { hour: 12, label: '12pm' }, { hour: 18, label: '6pm' }];
 
-  overlay.innerHTML = `
-    <div class="panel" role="dialog" aria-modal="true" aria-label="Settings">
-      <div class="panel-handle"></div>
-      <h2>Settings</h2>
-
-      <div class="setting-row">
-        <div>
-          <div class="setting-label">Appearance</div>
-        </div>
-        <select class="theme-select" id="theme-sel" aria-label="Colour theme">
-          <option value="system"${state.theme === 'system' ? ' selected' : ''}>System</option>
-          <option value="dark"${state.theme === 'dark' ? ' selected' : ''}>Dark</option>
-          <option value="light"${state.theme === 'light' ? ' selected' : ''}>Light</option>
-        </select>
-      </div>
-
-      ${notifSupported ? `
-      <div class="setting-row notification-setting">
-        <div class="setting-row-main">
-          <div>
-            <div class="setting-label">Bell Notifications</div>
-            <div class="setting-sublabel">${perm === 'denied' ? 'Blocked in browser settings' : notificationsOn ? 'Choose one or more times' : 'Off'}</div>
-          </div>
-          <label class="toggle" aria-label="Enable notifications">
-            <input type="checkbox" id="notif-toggle" ${notificationsOn ? 'checked' : ''} ${perm === 'denied' ? 'disabled' : ''}>
-            <span class="toggle-track"></span>
-          </label>
-        </div>
-        <div class="bell-checks">
-          ${bellOptions.map(({ hour, label }) => {
-            return `<label class="bell-check">
-              <input type="checkbox" data-hour="${hour}" class="bell-hour" ${notificationsOn && selectedHours.includes(hour) ? 'checked' : ''} ${perm === 'denied' ? 'disabled' : ''}>
-              ${label}
-            </label>`;
-          }).join('')}
-        </div>
-      </div>` : ''}
-
-      <div class="setting-row">
-        <div>
-          <div class="setting-label">Streak</div>
-          <div class="setting-sublabel">${getStreak().streak} day streak · ${getStreak().total} total prayers</div>
-        </div>
-      </div>
+  popup.innerHTML = `
+    <div class="bell-popup-title">Bell Reminders</div>
+    <div class="bell-popup-row">
+      <span class="setting-sublabel">${perm === 'denied' ? 'Blocked in browser' : notificationsOn ? 'On' : 'Off'}</span>
+      <label class="toggle" aria-label="Enable bell reminders">
+        <input type="checkbox" id="bell-toggle" ${notificationsOn ? 'checked' : ''} ${perm === 'denied' ? 'disabled' : ''}>
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+    <div class="bell-checks">
+      ${bellOptions.map(({ hour, label }) =>
+        `<label class="bell-check">
+          <input type="checkbox" data-hour="${hour}" class="bell-hour"
+            ${notificationsOn && selectedHours.includes(hour) ? 'checked' : ''}
+            ${perm === 'denied' ? 'disabled' : ''}>
+          ${label}
+        </label>`
+      ).join('')}
     </div>
   `;
 
-  $('theme-sel').addEventListener('change', e => {
-    state.theme = e.target.value;
-    localStorage.setItem('angelus_theme', state.theme);
-    applyTheme(state.theme);
-    renderPanel();
+  $('bell-toggle').addEventListener('change', async e => {
+    if (e.target.checked) {
+      const result = await requestPermission();
+      if (result !== 'granted') { e.target.checked = false; return; }
+      saveSchedule({ enabled: true, hours: selectedHours.length ? selectedHours : [6, 12, 18] });
+    } else {
+      saveSchedule({ ...schedule, enabled: false, hours: selectedHours });
+    }
+    refreshNotificationTimers();
+    renderBellPopup();
   });
 
-  const notifToggle = $('notif-toggle');
-  if (notifToggle) {
-    notifToggle.addEventListener('change', async e => {
-      if (e.target.checked) {
-        const result = await requestPermission();
-        if (result !== 'granted') { e.target.checked = false; return; }
-        saveSchedule({ enabled: true, hours: selectedHours.length ? selectedHours : [6,12,18] });
-      } else {
-        saveSchedule({ ...schedule, enabled: false, hours: selectedHours });
-      }
-      refreshNotificationTimers();
-      renderPanel();
-    });
-  }
-
-  document.querySelectorAll('.bell-hour').forEach(cb => {
+  popup.querySelectorAll('.bell-hour').forEach(cb => {
     cb.addEventListener('change', async e => {
       if (e.target.checked) {
         const result = await requestPermission();
-        if (result !== 'granted') {
-          e.target.checked = false;
-          renderPanel();
-          return;
-        }
+        if (result !== 'granted') { e.target.checked = false; renderBellPopup(); return; }
       }
-      const checked = [...document.querySelectorAll('.bell-hour:checked')].map(c => parseInt(c.dataset.hour));
+      const checked = [...popup.querySelectorAll('.bell-hour:checked')].map(c => parseInt(c.dataset.hour));
       saveSchedule({ enabled: checked.length > 0, hours: checked });
       refreshNotificationTimers();
-      renderPanel();
+      renderBellPopup();
     });
   });
-}
-
-function openPanel() {
-  _panelPrevFocus = document.activeElement;
-  state.panelOpen = true;
-  renderPanel();
-  const overlay = $('panel-overlay');
-  overlay.classList.add('open');
-  const panel = overlay.querySelector('.panel');
-  const firstFocusable = panel.querySelector('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
-  if (firstFocusable) firstFocusable.focus();
-  _panelTrapHandler = e => {
-    if (e.key === 'Escape') { closePanel(); return; }
-    if (e.key !== 'Tab') return;
-    const focusable = [...panel.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter(el => !el.disabled);
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (e.shiftKey) {
-      if (document.activeElement === first) { last.focus(); e.preventDefault(); }
-    } else {
-      if (document.activeElement === last) { first.focus(); e.preventDefault(); }
-    }
-  };
-  document.addEventListener('keydown', _panelTrapHandler);
-}
-
-function closePanel() {
-  state.panelOpen = false;
-  $('panel-overlay').classList.remove('open');
-  if (_panelTrapHandler) { document.removeEventListener('keydown', _panelTrapHandler); _panelTrapHandler = null; }
-  if (_panelPrevFocus)   { _panelPrevFocus.focus(); _panelPrevFocus = null; }
 }
 
 // ── Audio toggle ───────────────────────────────────
