@@ -1,6 +1,6 @@
 // sw.js — Service Worker for offline support and background bells
 
-const CACHE = 'angelus-v3';
+const CACHE = 'angelus-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -12,8 +12,10 @@ const ASSETS = [
   './notifications.js',
   './audio.js',
   './manifest.json',
+  './icons/favicon.png',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './icons/badge-72.png'
 ];
 
 // ── Install: pre-cache all static assets ──────────
