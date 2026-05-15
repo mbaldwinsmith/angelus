@@ -132,7 +132,7 @@ export const reginaCoeli = {
     body: [
       { versicle: 'Queen of Heaven, rejoice, alleluia:', response: 'For He whom thou didst merit to bear, alleluia,' },
       { versicle: 'Hath risen as He said, alleluia:', response: 'Pray for us to God, alleluia.' },
-      { versicle: 'V. Rejoice and be glad, O Virgin Mary, alleluia:', response: 'R. For the Lord is truly risen, alleluia.' }
+      { versicle: 'Rejoice and be glad, O Virgin Mary, alleluia:', response: 'For the Lord is truly risen, alleluia.' }
     ],
     collectTitle: 'Let us pray.',
     collect: 'O God, who by the Resurrection of Thy Son, our Lord Jesus Christ, hast vouchsafed to make glad the whole world: grant, we beseech Thee, that through the intercession of the Virgin Mary His Mother, we may attain the joys of eternal life. Through the same Christ our Lord. Amen.'
@@ -143,7 +143,7 @@ export const reginaCoeli = {
     body: [
       { versicle: 'Queen of heaven, rejoice, alleluia.', response: 'For he whom you were privileged to bear, alleluia,' },
       { versicle: 'Has risen as he said, alleluia.', response: 'Pray for us to God, alleluia.' },
-      { versicle: 'V. Rejoice and be glad, O Virgin Mary, alleluia.', response: 'R. For the Lord has truly risen, alleluia.' }
+      { versicle: 'Rejoice and be glad, O Virgin Mary, alleluia.', response: 'For the Lord has truly risen, alleluia.' }
     ],
     collectTitle: 'Let us pray.',
     collect: 'O God, by the resurrection of your Son, our Lord Jesus Christ, you have brought joy to the world. Through the prayers of his mother, the Virgin Mary, may we come to the joys of eternal life. Through Christ our Lord. Amen.'
@@ -154,7 +154,7 @@ export const reginaCoeli = {
     body: [
       { versicle: 'Regina caeli, laetare, alleluia:', response: 'Quia quem meruisti portare, alleluia,' },
       { versicle: 'Resurrexit sicut dixit, alleluia:', response: 'Ora pro nobis Deum, alleluia.' },
-      { versicle: 'V. Gaude et laetare, Virgo Maria, alleluia:', response: 'R. Quia surrexit Dominus vere, alleluia.' }
+      { versicle: 'Gaude et laetare, Virgo Maria, alleluia:', response: 'Quia surrexit Dominus vere, alleluia.' }
     ],
     collectTitle: 'Oremus.',
     collect: 'Deus, qui per resurrectionem Filii tui Domini nostri Iesu Christi mundum laetificare dignatus es: praesta, quaesumus, ut per eius Genetricem Virginem Mariam perpetuae capiamus gaudia vitae. Per eundem Christum Dominum nostrum. Amen.'
