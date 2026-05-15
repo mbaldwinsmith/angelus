@@ -93,7 +93,7 @@ function renderControls() {
   let el = $('controls-bar');
   if (!el) { el = document.createElement('div'); el.id = 'controls-bar'; el.className = 'controls'; app.appendChild(el); }
   const audioBtn = audioSupported()
-    ? `<button class="icon-btn${state.audioOn ? ' active' : ''}" id="btn-audio" title="Toggle narration" aria-label="Toggle audio narration">🔊</button>`
+    ? `<button class="icon-btn${state.audioOn ? ' active' : ''}" id="btn-audio" title="Toggle narration" aria-label="Toggle audio narration">${state.audioOn ? '🔊' : '🔈'}</button>`
     : '';
   el.innerHTML = `
     <div class="mode-tabs" role="tablist" aria-label="Prayer mode">
@@ -105,8 +105,8 @@ function renderControls() {
     </div>
     <div class="icon-btns">
       ${audioBtn}
-      <button class="icon-btn" id="btn-theme" title="Toggle theme" aria-label="Toggle colour theme">${getResolvedTheme() === 'dark' ? '☽' : '☀'}</button>
-      <button class="icon-btn${state.bellPopupOpen ? ' active' : ''}" id="btn-bell" title="Set reminders" aria-label="Set bell reminders">🔔</button>
+      <button class="icon-btn" id="btn-theme" title="Toggle theme" aria-label="Toggle colour theme">${getResolvedTheme() === 'dark' ? '🌛' : '🌞'}</button>
+      <button class="icon-btn${state.bellPopupOpen ? ' active' : ''}" id="btn-bell" title="Set reminders" aria-label="Set bell reminders">${state.bellPopupOpen ? '🔔' : '🔕'}</button>
     </div>
   `;
   const modeTabs = Array.from(el.querySelectorAll('.mode-tab'));
