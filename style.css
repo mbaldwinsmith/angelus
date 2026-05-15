@@ -5,6 +5,8 @@
 
 /* ── Variables ───────────────────────────────────── */
 :root {
+  --season-color: #c9a84c;
+  --season-dim:   #8a6f2e;
   --bg:           #0e0f14;
   --bg2:          #14151c;
   --bg3:          #1a1c26;
@@ -14,10 +16,10 @@
   --gold-bright:  #e8c96a;
   --gold-dim:     #8a6f2e;
   --crimson:      #8b1a2a;
-  --crimson-soft: #a52535;
+  --crimson-soft: #d0606e;
   --text:         #e8e0d0;
   --text-mid:     #b0a890;
-  --text-dim:     #6e6654;
+  --text-dim:     #8a8070;
   --white:        #f5f0e8;
   --radius:       4px;
   --max-w:        560px;
@@ -38,7 +40,7 @@
     --crimson-soft: #921828;
     --text:         #2a2418;
     --text-mid:     #5a4e38;
-    --text-dim:     #9a8e78;
+    --text-dim:     #6e6050;
     --white:        #1a1408;
   }
 }
@@ -53,10 +55,10 @@
   --gold-bright:  #e8c96a;
   --gold-dim:     #8a6f2e;
   --crimson:      #8b1a2a;
-  --crimson-soft: #a52535;
+  --crimson-soft: #d0606e;
   --text:         #e8e0d0;
   --text-mid:     #b0a890;
-  --text-dim:     #6e6654;
+  --text-dim:     #8a8070;
   --white:        #f5f0e8;
 }
 
@@ -73,9 +75,15 @@
   --crimson-soft: #921828;
   --text:         #2a2418;
   --text-mid:     #5a4e38;
-  --text-dim:     #9a8e78;
+  --text-dim:     #6e6050;
   --white:        #1a1408;
 }
+
+/* ── Liturgical season accents ───────────────────── */
+body[data-season="lent"]       { --season-color: #9a7aba; --season-dim: #6a4a9a; }
+body[data-season="triduum"]    { --season-color: #7a7068; --season-dim: #504840; }
+body[data-season="advent"]     { --season-color: #6a92c8; --season-dim: #4a6aac; }
+body[data-season="eastertide"] { --season-color: #e0d070; --season-dim: #b0a050; }
 
 /* ── Reset ───────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -123,15 +131,17 @@ header {
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1rem;
-  color: var(--gold-dim);
+  color: var(--season-dim);
   font-size: 0.7rem;
   letter-spacing: 0.15em;
+  transition: color 0.6s ease;
 }
 .header-rule::before, .header-rule::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  background: linear-gradient(90deg, transparent, var(--season-dim), transparent);
+  transition: background 0.6s ease;
 }
 
 h1 {
@@ -269,7 +279,7 @@ h1 {
 
 .ornament {
   text-align: center;
-  color: var(--gold-dim);
+  color: var(--season-dim);
   font-size: 0.65rem;
   letter-spacing: 0.3em;
   margin: 1rem 0;
@@ -514,10 +524,158 @@ h1 {
 }
 .bell-check input[type="checkbox"] { accent-color: var(--gold); }
 
+/* ── Triduum ─────────────────────────────────────── */
+.triduum-text {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+  font-style: italic;
+  text-align: center;
+  margin: 1.75rem 0;
+}
+
+/* ── Daily intention ─────────────────────────────── */
+#intention-wrap {
+  margin-top: 1.5rem;
+}
+
+.intention-label {
+  display: block;
+  font-family: 'IM Fell English SC', Georgia, serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+
+.intention-input {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-mid);
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 0.88rem;
+  font-style: italic;
+  line-height: 1.6;
+  padding: 0.65rem 0.75rem;
+  resize: none;
+  min-height: 4.5rem;
+  transition: border-color 0.2s ease;
+}
+.intention-input::placeholder { color: var(--text-dim); }
+.intention-input:focus {
+  outline: none;
+  border-color: var(--gold-dim);
+}
+
+/* ── History calendar ────────────────────────────── */
+.cal-toggle {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  margin-left: 0.6rem;
+  opacity: 0.7;
+  transition: opacity 0.2s, color 0.2s;
+}
+.cal-toggle:hover { opacity: 1; color: var(--gold-dim); }
+
+.calendar {
+  margin-top: 0.75rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem 1rem;
+  animation: fadeIn 0.25s ease;
+}
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.cal-month {
+  font-family: 'IM Fell English SC', Georgia, serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+
+.cal-nav {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0 0.35rem;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.cal-nav:hover:not(:disabled) { color: var(--gold); }
+.cal-nav:disabled { opacity: 0.2; cursor: default; }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.cal-dow {
+  text-align: center;
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  padding-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  font-size: 0.68rem;
+  border-radius: 2px;
+  color: var(--text-dim);
+}
+
+.cal-empty  { background: none; }
+.cal-future { opacity: 0.25; }
+.cal-missed { opacity: 0.35; }
+.cal-prayed {
+  background: rgba(201, 168, 76, 0.13);
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+}
+.cal-today {
+  outline: 1px solid var(--crimson-soft);
+  outline-offset: -1px;
+  color: var(--text);
+}
+.cal-today.cal-prayed {
+  background: rgba(201, 168, 76, 0.2);
+  outline-color: var(--gold);
+  color: var(--gold-bright);
+}
+
 /* ── Responsive ──────────────────────────────────── */
 @media (max-width: 400px) {
   .mode-tab { font-size: 0.68rem; padding: 0.2rem 0.35rem; }
   h1 { font-size: 1.9rem; }
+}
+
+/* ── Reduced motion ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ── No-JS fallback ──────────────────────────────── */

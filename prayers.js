@@ -2,6 +2,45 @@
 
 export const PRAYER_MODES = ['traditional', 'contemporary', 'latin'];
 
+export const SEASON_LABELS = {
+  eastertide: 'Regina Caeli · Eastertide',
+  triduum:    'The Sacred Triduum · Bells Are Silent',
+  lent:       'Lenten Season · Fast & Prayer',
+  advent:     'Advent Season · Come, Lord Jesus',
+  ordinary:   'The Incarnation · Thrice Daily',
+};
+
+export function getSeason(date = new Date()) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const year = d.getFullYear();
+  const easter = getEasterDate(year);
+  const easterDay = new Date(easter.getFullYear(), easter.getMonth(), easter.getDate());
+
+  const pentecost = new Date(easterDay);
+  pentecost.setDate(easterDay.getDate() + 49);
+  if (d >= easterDay && d <= pentecost) return 'eastertide';
+
+  // Triduum: Good Friday and Holy Saturday (Easter −2 through Easter −1)
+  const goodFriday = new Date(easterDay);
+  goodFriday.setDate(easterDay.getDate() - 2);
+  if (d >= goodFriday && d < easterDay) return 'triduum';
+
+  const ashWednesday = new Date(easterDay);
+  ashWednesday.setDate(easterDay.getDate() - 46);
+  const holySaturday = new Date(easterDay);
+  holySaturday.setDate(easterDay.getDate() - 1);
+  if (d >= ashWednesday && d <= holySaturday) return 'lent';
+
+  // First Sunday of Advent is the Sunday between Nov 27 and Dec 3
+  const nov27 = new Date(year, 10, 27);
+  const dow = nov27.getDay();
+  const adventSunday = new Date(year, 10, 27 + (dow === 0 ? 0 : 7 - dow));
+  const christmasEve = new Date(year, 11, 24);
+  if (d >= adventSunday && d <= christmasEve) return 'advent';
+
+  return 'ordinary';
+}
+
 export function isEastertide(date = new Date()) {
   const year = date.getFullYear();
   const easter = getEasterDate(year);

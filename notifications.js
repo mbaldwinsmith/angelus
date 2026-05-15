@@ -4,10 +4,24 @@ export const BELL_HOURS = [6, 12, 18];
 
 export async function requestPermission() {
   if (!('Notification' in window)) return 'unsupported';
-  if (Notification.permission === 'granted') return 'granted';
+  if (Notification.permission === 'granted') {
+    await tryRegisterPeriodicSync();
+    return 'granted';
+  }
   if (Notification.permission === 'denied') return 'denied';
   const result = await Notification.requestPermission();
+  if (result === 'granted') await tryRegisterPeriodicSync();
   return result;
+}
+
+async function tryRegisterPeriodicSync() {
+  if (!('serviceWorker' in navigator)) return;
+  if (!('periodicSync' in ServiceWorkerRegistration.prototype)) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    // minInterval: 6 hours — browser may fire less frequently
+    await reg.periodicSync.register('angelus-bell', { minInterval: 6 * 60 * 60 * 1000 });
+  } catch { /* permission denied or not supported — setTimeout path handles it */ }
 }
 
 export function getPermission() {
