@@ -1,0 +1,512 @@
+/* style.css — Angelus PWA
+   Aesthetic: Illuminated manuscript — midnight, gold, crimson */
+
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap');
+
+/* ── Variables ───────────────────────────────────── */
+:root {
+  --bg:           #0e0f14;
+  --bg2:          #14151c;
+  --bg3:          #1a1c26;
+  --surface:      #1e2030;
+  --border:       #2e3050;
+  --gold:         #c9a84c;
+  --gold-bright:  #e8c96a;
+  --gold-dim:     #8a6f2e;
+  --crimson:      #8b1a2a;
+  --crimson-soft: #a52535;
+  --text:         #e8e0d0;
+  --text-mid:     #b0a890;
+  --text-dim:     #6e6654;
+  --white:        #f5f0e8;
+  --radius:       4px;
+  --max-w:        560px;
+  font-size: 16px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:           #f5f0e6;
+    --bg2:          #ede8da;
+    --bg3:          #e5dece;
+    --surface:      #ddd7c8;
+    --border:       #c8bfa8;
+    --gold:         #8a6220;
+    --gold-bright:  #6a4a10;
+    --gold-dim:     #b8952a;
+    --crimson:      #7a1020;
+    --crimson-soft: #921828;
+    --text:         #2a2418;
+    --text-mid:     #5a4e38;
+    --text-dim:     #9a8e78;
+    --white:        #1a1408;
+  }
+}
+
+[data-theme="dark"] {
+  --bg:           #0e0f14;
+  --bg2:          #14151c;
+  --bg3:          #1a1c26;
+  --surface:      #1e2030;
+  --border:       #2e3050;
+  --gold:         #c9a84c;
+  --gold-bright:  #e8c96a;
+  --gold-dim:     #8a6f2e;
+  --crimson:      #8b1a2a;
+  --crimson-soft: #a52535;
+  --text:         #e8e0d0;
+  --text-mid:     #b0a890;
+  --text-dim:     #6e6654;
+  --white:        #f5f0e8;
+}
+
+[data-theme="light"] {
+  --bg:           #f5f0e6;
+  --bg2:          #ede8da;
+  --bg3:          #e5dece;
+  --surface:      #ddd7c8;
+  --border:       #c8bfa8;
+  --gold:         #8a6220;
+  --gold-bright:  #6a4a10;
+  --gold-dim:     #b8952a;
+  --crimson:      #7a1020;
+  --crimson-soft: #921828;
+  --text:         #2a2418;
+  --text-mid:     #5a4e38;
+  --text-dim:     #9a8e78;
+  --white:        #1a1408;
+}
+
+/* ── Reset ───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IM Fell English', Georgia, serif;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/* ── Noise texture overlay ───────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* ── Layout ──────────────────────────────────────── */
+#app {
+  width: 100%;
+  max-width: var(--max-w);
+  padding: 0 1.25rem 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ──────────────────────────────────────── */
+header {
+  text-align: center;
+  padding: 2.5rem 0 1.5rem;
+  position: relative;
+}
+
+.header-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: var(--gold-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+}
+.header-rule::before, .header-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+h1 {
+  font-family: 'IM Fell English SC', Georgia, serif;
+  font-size: clamp(2rem, 8vw, 2.8rem);
+  color: var(--gold);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  font-style: italic;
+  color: var(--text-mid);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+
+.time-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+
+/* ── Controls bar ────────────────────────────────── */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 1.75rem;
+  padding: 0.6rem 0.75rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.mode-tabs {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.mode-tab {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: all 0.18s ease;
+}
+.mode-tab:hover { color: var(--text-mid); border-color: var(--border); }
+.mode-tab.active {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+  background: rgba(201,168,76,0.06);
+}
+
+.icon-btns {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.icon-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 0.9rem;
+  transition: all 0.18s ease;
+  position: relative;
+}
+.icon-btn:hover { color: var(--text-mid); border-color: var(--border); background: var(--surface); }
+.icon-btn.active { color: var(--gold); border-color: var(--gold-dim); background: rgba(201,168,76,0.06); }
+
+/* ── Prayer card ─────────────────────────────────── */
+.prayer-container {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.prayer-title {
+  font-family: 'IM Fell English SC', Georgia, serif;
+  font-size: 1.15rem;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  text-align: center;
+  margin-bottom: 0.2rem;
+}
+
+.prayer-subtitle {
+  font-style: italic;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  text-align: center;
+  letter-spacing: 0.06em;
+  margin-bottom: 1.75rem;
+}
+
+.verse-block {
+  margin-bottom: 1.5rem;
+}
+
+.versicle-line {
+  display: grid;
+  grid-template-columns: 1rem 1fr;
+  gap: 0 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.sigil {
+  color: var(--crimson-soft);
+  font-size: 0.85em;
+  padding-top: 0.1em;
+  user-select: none;
+}
+
+.versicle-text { color: var(--text); line-height: 1.55; font-size: 0.95rem; }
+.response-text { color: var(--text-mid); line-height: 1.55; font-size: 0.95rem; padding-left: 1.5rem; }
+
+.ornament {
+  text-align: center;
+  color: var(--gold-dim);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  margin: 1rem 0;
+  user-select: none;
+}
+
+/* ── Prayer sub-card (Hail Mary etc) ─────────────── */
+.sub-prayer {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold-dim);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  margin-top: 0.75rem;
+}
+
+.sub-prayer-title {
+  font-family: 'IM Fell English SC', Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-dim);
+  margin-bottom: 0.5rem;
+}
+
+.sub-prayer-text {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-mid);
+  white-space: pre-line;
+  font-style: italic;
+}
+
+/* ── Collect section ─────────────────────────────── */
+.collect-section {
+  margin-top: 1.75rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
+.collect-label {
+  font-family: 'IM Fell English SC', Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--crimson-soft);
+  margin-bottom: 0.75rem;
+}
+
+.collect-text {
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+  font-style: italic;
+}
+
+.closing-text {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  white-space: pre-line;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  line-height: 1.7;
+}
+
+/* ── Complete button ─────────────────────────────── */
+.btn-complete {
+  display: block;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 0.85rem;
+  background: none;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  font-family: 'IM Fell English SC', Georgia, serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+}
+.btn-complete:hover {
+  background: rgba(201,168,76,0.08);
+  border-color: var(--gold);
+}
+.btn-complete.done {
+  color: var(--text-dim);
+  border-color: var(--border);
+  cursor: default;
+}
+
+/* ── Streak pill ─────────────────────────────────── */
+.streak-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  justify-content: center;
+  margin-top: 1rem;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+.streak-pill.visible { opacity: 1; }
+.streak-flame {
+  font-size: 0.9rem;
+}
+
+/* ── Settings panel ──────────────────────────────── */
+.panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  backdrop-filter: blur(2px);
+}
+.panel-overlay.open { opacity: 1; pointer-events: all; }
+
+.panel {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: var(--max-w);
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-radius: 12px 12px 0 0;
+  padding: 1.5rem 1.5rem 2.5rem;
+  z-index: 101;
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.panel-overlay.open .panel { transform: translateX(-50%) translateY(0); }
+
+.panel-handle {
+  width: 2.5rem;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 1.5rem;
+}
+
+.panel h2 {
+  font-family: 'IM Fell English SC', Georgia, serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  margin-bottom: 1.25rem;
+  font-weight: 400;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.setting-row:last-child { border-bottom: none; }
+
+.setting-label {
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  letter-spacing: 0.02em;
+}
+.setting-sublabel {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-top: 0.15rem;
+}
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  width: 2.5rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--border);
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 1rem; height: 1rem;
+  background: var(--text-dim);
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+.toggle input:checked + .toggle-track { background: var(--gold-dim); }
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(1.1rem);
+  background: var(--gold);
+}
+
+.theme-select, .notif-select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-mid);
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 0.82rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.bell-checks {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.bell-check {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-mid);
+  cursor: pointer;
+}
+.bell-check input[type="checkbox"] { accent-color: var(--gold); }
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 400px) {
+  .mode-tab { font-size: 0.68rem; padding: 0.2rem 0.35rem; }
+  h1 { font-size: 1.9rem; }
+}
+
+/* ── No-JS fallback ──────────────────────────────── */
+noscript { display: block; text-align: center; padding: 2rem; color: var(--text-dim); font-style: italic; }
