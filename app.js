@@ -276,7 +276,7 @@ function renderTriduum(prayedToday) {
   return `
     <div class="prayer-container" aria-live="polite">
       <div class="prayer-title">The Sacred Triduum</div>
-      <div class="prayer-subtitle">Good Friday &amp; Holy Saturday</div>
+      <div class="prayer-subtitle">Holy Thursday Evening · Good Friday · Holy Saturday</div>
       <p class="triduum-text">
         The Angelus bell is silent from Good Friday until the Easter Vigil.<br>
         The Church keeps watch at the tomb in prayer, fasting, and adoration.

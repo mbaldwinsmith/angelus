@@ -4,7 +4,7 @@ export const PRAYER_MODES = ['traditional', 'contemporary', 'latin'];
 
 export const SEASON_LABELS = {
   eastertide: 'Regina Caeli · Eastertide',
-  triduum:    'The Sacred Triduum · Bells Are Silent',
+  triduum:    'The Sacred Triduum · From Holy Thursday Evening',
   lent:       'Lenten Season · Fast & Prayer',
   advent:     'Advent Season · Come, Lord Jesus',
   ordinary:   'The Incarnation · Thrice Daily',
@@ -20,16 +20,18 @@ export function getSeason(date = new Date()) {
   pentecost.setDate(easterDay.getDate() + 49);
   if (d >= easterDay && d <= pentecost) return 'eastertide';
 
-  // Triduum: Good Friday and Holy Saturday (Easter −2 through Easter −1)
+  // Triduum: Holy Thursday evening (6pm+) through Holy Saturday
+  const holyThursday = new Date(easterDay);
+  holyThursday.setDate(easterDay.getDate() - 3);
   const goodFriday = new Date(easterDay);
   goodFriday.setDate(easterDay.getDate() - 2);
-  if (d >= goodFriday && d < easterDay) return 'triduum';
+  const isHolyThursdayEvening = d.getTime() === holyThursday.getTime() && date.getHours() >= 18;
+  if (isHolyThursdayEvening || (d >= goodFriday && d < easterDay)) return 'triduum';
 
+  // Lent: Ash Wednesday through Holy Thursday (ends after the noon Angelus)
   const ashWednesday = new Date(easterDay);
   ashWednesday.setDate(easterDay.getDate() - 46);
-  const holySaturday = new Date(easterDay);
-  holySaturday.setDate(easterDay.getDate() - 1);
-  if (d >= ashWednesday && d <= holySaturday) return 'lent';
+  if (d >= ashWednesday && d <= holyThursday) return 'lent';
 
   // First Sunday of Advent is the Sunday between Nov 27 and Dec 3
   const nov27 = new Date(year, 10, 27);
