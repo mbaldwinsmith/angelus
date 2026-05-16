@@ -15,6 +15,7 @@ const state = {
   calendarOpen: false,
   calendarYear: new Date().getFullYear(),
   calendarMonth: new Date().getMonth(),
+  installPrompt: null,
 };
 
 // ── DOM refs ───────────────────────────────────────
@@ -24,6 +25,33 @@ const app = $('app');
 // ── Bell popup management ──────────────────────────
 let _bellCloseHandler = null;
 let _bellKeyHandler = null;
+
+// ── PWA install prompt ─────────────────────────────
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  state.installPrompt = e;
+  renderControls();
+});
+window.addEventListener('appinstalled', () => {
+  state.installPrompt = null;
+  renderControls();
+});
+
+function isIosSafari() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream
+    && !navigator.userAgent.includes('CriOS') && !navigator.userAgent.includes('FxiOS');
+}
+
+function isInStandaloneMode() {
+  return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+}
+
+async function triggerInstall() {
+  if (!state.installPrompt) return;
+  state.installPrompt.prompt();
+  const { outcome } = await state.installPrompt.userChoice;
+  if (outcome === 'accepted') { state.installPrompt = null; renderControls(); }
+}
 
 // ── Init ───────────────────────────────────────────
 function init() {
@@ -96,6 +124,10 @@ function renderControls() {
   const audioBtn = audioSupported()
     ? `<button class="icon-btn${state.audioOn ? ' active' : ''}" id="btn-audio" title="Toggle narration" aria-label="Toggle audio narration">${state.audioOn ? '🔊' : '🔈'}</button>`
     : '';
+  const showInstall = !isInStandaloneMode() && (state.installPrompt || isIosSafari());
+  const installBtn = showInstall
+    ? `<button class="icon-btn" id="btn-install" title="Install app" aria-label="Install app">⊕</button>`
+    : '';
   el.innerHTML = `
     <div class="mode-tabs" role="tablist" aria-label="Prayer mode">
       ${PRAYER_MODES.map(m => `
@@ -108,6 +140,7 @@ function renderControls() {
       ${audioBtn}
       <button class="icon-btn" id="btn-theme" title="Toggle theme" aria-label="Toggle colour theme">${getResolvedTheme() === 'dark' ? '🌛' : '🌞'}</button>
       <button class="icon-btn${state.bellPopupOpen ? ' active' : ''}" id="btn-bell" title="Set reminders" aria-label="Set bell reminders">${getSchedule().enabled ? '🔔' : '🔕'}</button>
+      ${installBtn}
     </div>
   `;
   const modeTabs = Array.from(el.querySelectorAll('.mode-tab'));
@@ -127,6 +160,16 @@ function renderControls() {
   if (audioEl) audioEl.addEventListener('click', toggleAudio);
   $('btn-theme').addEventListener('click', toggleTheme);
   $('btn-bell').addEventListener('click', toggleBellPopup);
+  const installEl = $('btn-install');
+  if (installEl) {
+    if (isIosSafari() && !state.installPrompt) {
+      installEl.addEventListener('click', () => {
+        alert('To install: tap the Share button, then "Add to Home Screen".');
+      });
+    } else {
+      installEl.addEventListener('click', triggerInstall);
+    }
+  }
 }
 
 // ── Prayer renderer ────────────────────────────────
