@@ -1,6 +1,6 @@
 // app.js — Main application module (no build, vanilla ES modules)
 import { angelus, reginaCoeli, getSeason, SEASON_LABELS, PRAYER_MODES } from './prayers.js';
-import { recordPrayer, getStreak, hasPrayedToday, getHistory } from './streaks.js';
+import { recordPrayer, getStreak, hasPrayedToday, getHistory, migrateHistoryFromStreak } from './streaks.js';
 import { requestPermission, getPermission, getSchedule, saveSchedule, scheduleSessionAlarms, clearTimers } from './notifications.js';
 import { speak, speakLatin, stop, isSupported as audioSupported, isSpeaking } from './audio.js';
 import { getIntention, saveIntention, pruneIntentions } from './intentions.js';
@@ -27,6 +27,7 @@ let _bellKeyHandler = null;
 
 // ── Init ───────────────────────────────────────────
 function init() {
+  migrateHistoryFromStreak();
   pruneIntentions();
   applyTheme(state.theme);
   renderHeader();

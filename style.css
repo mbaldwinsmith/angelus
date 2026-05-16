@@ -592,12 +592,12 @@ h1 {
   place-items: center;
   font-size: 0.68rem;
   border-radius: 2px;
-  color: var(--text-dim);
+  color: var(--text-mid);
 }
 
 .cal-empty  { background: none; }
 .cal-future { opacity: 0.25; }
-.cal-missed { opacity: 0.35; }
+.cal-missed { opacity: 0.6; }
 .cal-prayed {
   background: rgba(201, 168, 76, 0.13);
   color: var(--gold);

@@ -36,6 +36,21 @@ export function getHistory() {
   } catch { return {}; }
 }
 
+// Backfill history from streak data for prayers recorded before history tracking was added.
+export function migrateHistoryFromStreak() {
+  const data = load();
+  if (!data.lastDate || data.streak < 1) return;
+  const h = getHistory();
+  let changed = false;
+  for (let i = 0; i < data.streak; i++) {
+    const d = new Date(data.lastDate + 'T12:00:00');
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().slice(0, 10);
+    if (!h[dateStr]) { h[dateStr] = true; changed = true; }
+  }
+  if (changed) localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+}
+
 function load() {
   try {
     return JSON.parse(localStorage.getItem(KEY)) || { streak: 0, lastDate: null, total: 0 };
