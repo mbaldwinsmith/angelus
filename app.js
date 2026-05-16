@@ -126,7 +126,7 @@ function renderControls() {
     : '';
   const showInstall = !isInStandaloneMode() && (state.installPrompt || isIosSafari());
   const installBtn = showInstall
-    ? `<button class="icon-btn" id="btn-install" title="Install app" aria-label="Install app">⊕</button>`
+    ? `<button class="icon-btn" id="btn-install" title="Install app" aria-label="Install app">⬇️</button>`
     : '';
   el.innerHTML = `
     <div class="mode-tabs" role="tablist" aria-label="Prayer mode">
