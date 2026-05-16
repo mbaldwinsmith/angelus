@@ -72,7 +72,7 @@ const AVE = {
   },
   contemporary: {
     title: 'Hail Mary',
-    text: 'Hail Mary, full of grace,\nthe Lord is with you.\nBlessed are you among women,\nand blessed is the fruit of your womb, Jesus.\nHoly Mary, Mother of God,\npray for us sinners,\nnow and at the hour of our death. Amen.'
+    text: 'Hail Mary, full of grace, the Lord is with thee; blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen.'
   },
   latin: {
     title: 'Ave Maria',
@@ -99,15 +99,15 @@ export const angelus = {
     title: 'The Angelus',
     subtitle: 'A Prayer of the Incarnation',
     verses: [
-      { versicle: 'The angel of the Lord spoke to Mary:', response: 'And she conceived by the power of the Holy Spirit.', prayer: AVE.contemporary },
-      { versicle: '"I am the servant of the Lord."', response: '"May it be done to me as you have said."', prayer: AVE.contemporary },
-      { versicle: 'And the Word became flesh:', response: 'And made his dwelling among us.', prayer: AVE.contemporary }
+      { versicle: 'The Angel of the Lord declared to Mary:', response: 'And she conceived of the Holy Spirit.', prayer: AVE.contemporary },
+      { versicle: 'Behold the handmaid of the Lord:', response: 'Be it done unto me according to Thy word.', prayer: AVE.contemporary },
+      { versicle: 'And the Word was made Flesh:', response: 'And dwelt among us.', prayer: AVE.contemporary }
     ],
-    collectVersicle: 'Pray for us, holy Mother of God.',
-    collectResponse: 'That we may be made worthy of the promises of Christ.',
+    collectVersicle: 'Pray for us, O Holy Mother of God,',
+    collectResponse: 'that we may be made worthy of the promises of Christ.',
     collectTitle: 'Let us pray.',
-    collect: 'Lord, fill our hearts with your grace. Through the message of an angel we have learned of the Incarnation of your Son; lead us by his suffering and death to the glory of the resurrection. We ask this through Christ our Lord. Amen.',
-    closing: 'May the divine help remain with us always.\nAnd with all who are absent from us. Amen.'
+    collect: 'Pour forth, we beseech Thee, O Lord, Thy grace into our hearts; that we, to whom the incarnation of Christ, Thy Son, was made known by the message of an angel, may by His Passion and Cross be brought to the glory of His Resurrection, through the same Christ Our Lord. Amen.',
+    closing: ''
   },
   latin: {
     title: 'Angelus Domini',
@@ -141,12 +141,12 @@ export const reginaCoeli = {
     title: 'Regina Caeli',
     subtitle: 'Eastertide Antiphon',
     body: [
-      { versicle: 'Queen of heaven, rejoice, alleluia.', response: 'For he whom you were privileged to bear, alleluia,' },
-      { versicle: 'Has risen as he said, alleluia.', response: 'Pray for us to God, alleluia.' },
+      { versicle: 'Queen of Heaven, rejoice, alleluia.', response: 'For He whom you did merit to bear, alleluia.' },
+      { versicle: 'Has risen, as he said, alleluia.', response: 'Pray for us to God, alleluia.' },
       { versicle: 'Rejoice and be glad, O Virgin Mary, alleluia.', response: 'For the Lord has truly risen, alleluia.' }
     ],
     collectTitle: 'Let us pray.',
-    collect: 'O God, by the resurrection of your Son, our Lord Jesus Christ, you have brought joy to the world. Through the prayers of his mother, the Virgin Mary, may we come to the joys of eternal life. Through Christ our Lord. Amen.'
+    collect: 'O God, who gave joy to the world through the resurrection of Thy Son, our Lord Jesus Christ, grant we beseech Thee, that through the intercession of the Virgin Mary, His Mother, we may obtain the joys of everlasting life. Through the same Christ our Lord. Amen.'
   },
   latin: {
     title: 'Regina Caeli',

@@ -234,7 +234,7 @@ function renderAngelus(data, prayedToday) {
         </div>
         <div class="collect-label" style="margin-top:1rem">${data.collectTitle}</div>
         <p class="collect-text">${data.collect}</p>
-        <p class="closing-text">${data.closing}</p>
+        ${data.closing ? `<p class="closing-text">${data.closing}</p>` : ''}
       </div>
       <button class="btn-complete${prayedToday ? ' done' : ''}" id="btn-complete">
         ${prayedToday ? 'Prayed ✦' : 'Mark as Prayed'}
