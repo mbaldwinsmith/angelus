@@ -102,13 +102,13 @@ export const angelus = {
     subtitle: 'A Prayer of the Incarnation',
     verses: [
       { versicle: 'The Angel of the Lord declared to Mary:', response: 'And she conceived of the Holy Spirit.', prayer: AVE.contemporary },
-      { versicle: 'Behold the handmaid of the Lord:', response: 'Be it done unto me according to Thy word.', prayer: AVE.contemporary },
+      { versicle: 'Behold the handmaid of the Lord:', response: 'Be it done unto me according to Your word.', prayer: AVE.contemporary },
       { versicle: 'And the Word was made Flesh:', response: 'And dwelt among us.', prayer: AVE.contemporary }
     ],
     collectVersicle: 'Pray for us, O Holy Mother of God,',
     collectResponse: 'that we may be made worthy of the promises of Christ.',
     collectTitle: 'Let us pray.',
-    collect: 'Pour forth, we beseech Thee, O Lord, Thy grace into our hearts; that we, to whom the incarnation of Christ, Thy Son, was made known by the message of an angel, may by His Passion and Cross be brought to the glory of His Resurrection, through the same Christ Our Lord. Amen.',
+    collect: 'Pour forth, we beseech You, O Lord, Your grace into our hearts; that we, to whom the incarnation of Christ, Your Son, was made known by the message of an angel, may by His Passion and Cross be brought to the glory of His Resurrection, through the same Christ Our Lord. Amen.',
     closing: ''
   },
   latin: {
