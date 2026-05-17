@@ -148,7 +148,7 @@ export const reginaCoeli = {
       { versicle: 'Rejoice and be glad, O Virgin Mary, alleluia.', response: 'For the Lord has truly risen, alleluia.' }
     ],
     collectTitle: 'Let us pray.',
-    collect: 'O God, who gave joy to the world through the resurrection of Thy Son, our Lord Jesus Christ, grant we beseech Thee, that through the intercession of the Virgin Mary, His Mother, we may obtain the joys of everlasting life. Through the same Christ our Lord. Amen.'
+    collect: 'O God, who gave joy to the world through the resurrection of Your Son, our Lord Jesus Christ, grant we beseech You, that through the intercession of the Virgin Mary, His Mother, we may obtain the joys of everlasting life. Through the same Christ our Lord. Amen.'
   },
   latin: {
     title: 'Regina Caeli',

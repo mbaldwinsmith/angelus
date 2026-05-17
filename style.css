@@ -240,7 +240,7 @@ h1 {
 
 .prayer-title {
   font-family: 'IM Fell English SC', Georgia, serif;
-  font-size: 1.15rem;
+  font-size: 1.45rem;
   color: var(--gold);
   letter-spacing: 0.06em;
   text-align: center;
@@ -250,7 +250,7 @@ h1 {
 .prayer-subtitle {
   font-style: italic;
   color: var(--text-dim);
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   text-align: center;
   letter-spacing: 0.06em;
   margin-bottom: 1.75rem;
@@ -274,8 +274,8 @@ h1 {
   user-select: none;
 }
 
-.versicle-text { color: var(--text); line-height: 1.55; font-size: 0.95rem; }
-.response-text { color: var(--text-mid); line-height: 1.55; font-size: 0.95rem; padding-left: 1.5rem; }
+.versicle-text { color: var(--text); line-height: 1.55; font-size: 1.05rem; }
+.response-text { color: var(--text-mid); line-height: 1.55; font-size: 1.05rem; padding-left: 1.5rem; }
 
 .ornament {
   text-align: center;
@@ -328,7 +328,7 @@ h1 {
 }
 
 .collect-text {
-  font-size: 0.92rem;
+  font-size: 1.05rem;
   line-height: 1.75;
   color: var(--text-mid);
   font-style: italic;
