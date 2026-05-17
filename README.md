@@ -9,13 +9,12 @@ A no-build progressive web app for the Angelus and Regina Caeli — the traditio
   - Ordinary time → the Angelus
   - Advent → Angelus with Advent framing
   - Lent → Angelus with Lenten framing
-  - Good Friday & Holy Saturday (Triduum) → solemn display; bells are silent
+  - Holy Thursday evening through Holy Saturday (Triduum) → solemn display; bells are silent
   - Easter Sunday through Pentecost (Eastertide) → Regina Caeli
 - **Bell reminders** — optional push notifications at 6am, 12pm, and 6pm; configurable per time slot; background delivery via Periodic Background Sync where supported
 - **Audio narration** — reads the prayer aloud via the Web Speech API, with a Latin voice for Latin mode
 - **Streak tracking** — records daily prayer with a running streak and total count
 - **Prayer history calendar** — month grid showing prayed, missed, and future days; navigate back month by month
-- **Daily intention** — a per-day text field, auto-saved to localStorage, pruned after 90 days
 - **Offline support** — service worker caches all assets; network-first for HTML, cache-first for everything else
 - **Dark / light theme** — follows system preference by default; toggle in the nav bar
 - **Installable** — full PWA manifest with icons; install to home screen on iOS and Android
@@ -51,7 +50,6 @@ angelus/
 ├── app.js            # Main module: state, rendering, event wiring
 ├── prayers.js        # All prayer text + liturgical season logic
 ├── streaks.js        # Daily prayer tracking and history
-├── intentions.js     # Per-day prayer intention (localStorage)
 ├── notifications.js  # Push notification scheduling
 ├── audio.js          # Web Speech API narration
 ├── sw.js             # Service worker — caching and background sync
@@ -68,7 +66,7 @@ Dates are calculated dynamically on each load — no hardcoded years or lookup t
 | Season | Dates |
 |--------|-------|
 | Lent | Ash Wednesday (Easter − 46) through Holy Saturday |
-| Triduum | Good Friday (Easter − 2) and Holy Saturday (Easter − 1) |
+| Triduum | Holy Thursday evening (Easter − 3, from 6pm) through Holy Saturday (Easter − 1) |
 | Eastertide | Easter Sunday through Pentecost (Easter + 49) |
 | Advent | First Sunday of Advent (Sunday between Nov 27–Dec 3) through Dec 24 |
 
@@ -88,7 +86,7 @@ Requires a modern browser with ES module support. Full feature availability:
 
 ## Prayer Texts
 
-The prayer texts were included in the initial build. They have not been independently verified against a definitive magisterial source. Before relying on this app liturgically, cross-reference the texts — particularly the Contemporary mode — against a trusted missal or the USCCB's published forms. All text lives in [`prayers.js`](prayers.js) and is straightforward to correct.
+The prayer texts have been verified against authoritative sources. All text lives in [`prayers.js`](prayers.js) and is straightforward to correct if needed.
 
 ## Storage
 
@@ -100,7 +98,6 @@ All data is stored in `localStorage` under the following keys:
 | `angelus_theme` | Theme override (`light` or `dark`) |
 | `angelus_streak` | Streak count, last date, total prayers |
 | `angelus_history` | Prayer history (date → boolean) |
-| `angelus_intentions` | Daily intentions (date → string, pruned at 90 days) |
 | `angelus_notif` | Notification schedule |
 
 No data leaves the device.
