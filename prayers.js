@@ -74,7 +74,7 @@ const AVE = {
   },
   contemporary: {
     title: 'Hail Mary',
-    text: 'Hail Mary, full of grace, the Lord is with thee; blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen.'
+    text: 'Hail Mary, full of grace, the Lord is with you; blessed are you among women and blessed is the fruit of your womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen.'
   },
   latin: {
     title: 'Ave Maria',
