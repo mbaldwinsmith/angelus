@@ -3,7 +3,6 @@ import { angelus, reginaCoeli, getSeason, SEASON_LABELS, PRAYER_MODES } from './
 import { recordPrayer, getStreak, hasPrayedToday, getHistory, migrateHistoryFromStreak } from './streaks.js';
 import { requestPermission, getPermission, getSchedule, saveSchedule, scheduleSessionAlarms, clearTimers } from './notifications.js';
 import { speak, speakLatin, stop, isSupported as audioSupported, isSpeaking } from './audio.js';
-import { getIntention, saveIntention, pruneIntentions } from './intentions.js';
 
 // ── State ──────────────────────────────────────────
 const state = {
@@ -56,12 +55,10 @@ async function triggerInstall() {
 // ── Init ───────────────────────────────────────────
 function init() {
   migrateHistoryFromStreak();
-  pruneIntentions();
   applyTheme(state.theme);
   renderHeader();
   renderControls();
   renderPrayer();
-  renderIntention();
   renderStreak();
   renderCalendar();
   refreshNotificationTimers();
@@ -295,30 +292,6 @@ function renderTriduum(prayedToday) {
   `;
 }
 
-// ── Daily intention ────────────────────────────────
-function renderIntention() {
-  let el = $('intention-wrap');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'intention-wrap';
-    app.appendChild(el);
-  }
-  const todayStr = new Date().toISOString().slice(0, 10);
-  const saved = getIntention(todayStr);
-  el.innerHTML = `
-    <label class="intention-label" for="intention-input">Today's Intention</label>
-    <textarea id="intention-input" class="intention-input"
-      placeholder="Offer this prayer for…"
-      maxlength="280"
-      aria-label="Prayer intention for today"
-    >${saved}</textarea>
-  `;
-  let debounceTimer;
-  $('intention-input').addEventListener('input', e => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => saveIntention(todayStr, e.target.value.trim()), 500);
-  });
-}
 
 // ── Streak display ─────────────────────────────────
 function renderStreak(data) {
