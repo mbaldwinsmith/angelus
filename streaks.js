@@ -4,7 +4,11 @@ const KEY = 'angelus_streak';
 const HISTORY_KEY = 'angelus_history';
 
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  return toDateKey(new Date());
+}
+
+function toDateKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
 export function recordPrayer() {
@@ -13,7 +17,7 @@ export function recordPrayer() {
   if (data.lastDate === t) return data; // already prayed today
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  const yStr = yesterday.toISOString().slice(0, 10);
+  const yStr = toDateKey(yesterday);
   data.streak = data.lastDate === yStr ? data.streak + 1 : 1;
   data.lastDate = t;
   data.total = (data.total || 0) + 1;
@@ -45,7 +49,7 @@ export function migrateHistoryFromStreak() {
   for (let i = 0; i < data.streak; i++) {
     const d = new Date(data.lastDate + 'T12:00:00');
     d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().slice(0, 10);
+    const dateStr = toDateKey(d);
     if (!h[dateStr]) { h[dateStr] = true; changed = true; }
   }
   if (changed) localStorage.setItem(HISTORY_KEY, JSON.stringify(h));

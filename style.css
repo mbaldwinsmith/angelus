@@ -597,3 +597,245 @@ h1 {
 
 /* ── No-JS fallback ──────────────────────────────── */
 noscript { display: block; text-align: center; padding: 2rem; color: var(--text-dim); font-style: italic; }
+
+/* ── Usability refresh ───────────────────────────── */
+:root {
+  --prayer-scale: 1;
+  --control-bg: color-mix(in srgb, var(--bg) 92%, transparent);
+}
+
+[data-text-size="small"]  { --prayer-scale: 0.92; }
+[data-text-size="large"]  { --prayer-scale: 1.14; }
+
+button, summary { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, summary:focus-visible, input:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+
+.header-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  color: var(--text-mid);
+}
+.header-meta .subtitle { font-size: 0.86rem; }
+.header-meta .time-badge { margin-top: 0; }
+.meta-separator { color: var(--season-dim); font-size: 0.6rem; }
+
+.controls {
+  position: sticky;
+  top: env(safe-area-inset-top, 0);
+  z-index: 20;
+  min-height: 3.5rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem;
+  background: var(--control-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.mode-tabs {
+  flex: 1;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 2px);
+  background: var(--bg2);
+}
+.mode-tab {
+  min-height: 2.75rem;
+  flex: 1;
+  padding: 0.5rem 0.65rem;
+  white-space: nowrap;
+}
+.mode-tab.active { background: var(--surface); }
+.icon-btn {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+.icon-btn svg, .settings-action svg, .cal-toggle svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.settings-menu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  width: min(19rem, calc(100vw - 2.5rem));
+  padding: 1rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+}
+.settings-section + .settings-section { margin-top: 0.9rem; }
+.settings-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--text-mid);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.setting-segments { display: flex; gap: 0.3rem; }
+.setting-choice {
+  flex: 1;
+  min-height: 2.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text-mid);
+  font: inherit;
+  cursor: pointer;
+}
+.setting-choice.active { color: var(--gold); border-color: var(--gold-dim); background: var(--surface); }
+.text-size-choice.size-small { font-size: 0.8rem; }
+.text-size-choice.size-large { font-size: 1.25rem; }
+.setting-check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  margin-top: 0.75rem;
+  color: var(--text-mid);
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.setting-check input { width: 1.1rem; height: 1.1rem; accent-color: var(--gold); }
+.settings-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.settings-action {
+  min-height: 3.5rem;
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--text-mid);
+  font-family: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.settings-action:hover { color: var(--gold); border-color: var(--border); background: var(--surface); }
+
+.versicle-text, .response-text, .collect-text { font-size: calc(1.05rem * var(--prayer-scale)); }
+.sub-prayer-text { font-size: calc(0.96rem * var(--prayer-scale)); }
+.versicle-text, .response-text { line-height: 1.65; }
+.response-text { color: var(--text); font-weight: 600; }
+.sub-prayer-text, .collect-text { color: var(--text-mid); font-style: normal; line-height: 1.8; }
+.sub-prayer { border-radius: 7px; }
+.repeated-prayer { padding: 0; overflow: hidden; }
+.repeated-prayer summary {
+  min-height: 3rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--gold-dim);
+  font-family: 'IM Fell English SC', Georgia, serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  list-style: none;
+}
+.repeated-prayer summary::-webkit-details-marker { display: none; }
+.repeated-prayer summary span { color: var(--text-dim); font-family: 'IM Fell English', Georgia, serif; font-size: 0.72rem; letter-spacing: 0; }
+.repeated-prayer[open] .sub-prayer-text { padding: 0 1rem 1rem; }
+
+.guided-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.guided-heading .prayer-title, .guided-heading .prayer-subtitle { text-align: left; }
+.guided-count { color: var(--text-dim); font-size: 0.75rem; white-space: nowrap; }
+.guided-progress { height: 3px; margin: -0.9rem 0 1.75rem; background: var(--border); overflow: hidden; }
+.guided-progress span { display: block; height: 100%; background: var(--season-color); transition: width 0.25s ease; }
+.guided-card {
+  min-height: 22rem;
+  padding: clamp(1.2rem, 5vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--season-dim);
+  border-radius: 8px;
+  background: var(--bg2);
+}
+.guided-card .sub-prayer { margin-top: 1.5rem; }
+.guided-collect .collect-text { color: var(--text); }
+.guided-actions { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 0.75rem; margin-top: 1rem; }
+.btn-primary, .btn-secondary {
+  min-height: 3rem;
+  border-radius: var(--radius);
+  font-family: 'IM Fell English SC', Georgia, serif;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+.btn-primary { border: 1px solid var(--gold-dim); background: var(--gold-dim); color: var(--bg); }
+.btn-secondary { border: 1px solid var(--border); background: none; color: var(--text-mid); }
+.btn-primary:disabled, .btn-secondary:disabled { opacity: 0.4; cursor: default; }
+.completion-status { min-height: 1.2rem; margin-top: 0.65rem; text-align: center; color: var(--gold); font-size: 0.8rem; }
+
+.completion-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg2);
+}
+.completion-icon { color: var(--gold); font-size: 1.25rem; }
+.completion-copy { display: flex; flex-direction: column; gap: 0.15rem; }
+.completion-copy strong { color: var(--text); font-weight: 400; }
+.completion-copy span { color: var(--text-dim); font-size: 0.75rem; }
+.cal-toggle {
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.4rem 0.55rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+}
+.cal-toggle:hover { border-color: var(--border); background: var(--surface); }
+.calendar { border-radius: 8px; }
+.cal-day { min-width: 2rem; }
+.btn-complete:disabled { opacity: 0.72; cursor: default; }
+
+@media (max-width: 520px) {
+  #app { padding-inline: 1rem; }
+  header { padding: 1.35rem 0 0.8rem; }
+  .header-rule { margin-bottom: 0.65rem; }
+  h1 { font-size: 2rem; margin-bottom: 0.45rem; }
+  .header-meta { gap: 0.3rem; }
+  .header-meta .subtitle, .header-meta .time-badge { font-size: 0.68rem; letter-spacing: 0.05em; }
+  .controls { margin-bottom: 1.35rem; padding-inline: 0; gap: 0.35rem; }
+  .mode-tab { min-height: 2.75rem; padding: 0.35rem 0.3rem; font-size: 0.68rem; }
+  .icon-btns { gap: 0; }
+  .prayer-subtitle { margin-bottom: 1.35rem; }
+  .verse-block { margin-bottom: 1.25rem; }
+  .sub-prayer { padding: 0.85rem; }
+  .repeated-prayer { padding: 0; }
+  .guided-card { min-height: 24rem; padding: 1.2rem; }
+  .completion-card { grid-template-columns: auto 1fr; }
+  .completion-card .cal-toggle { grid-column: 1 / -1; justify-content: center; border-top: 1px solid var(--border); border-radius: 0; }
+  .cal-day { min-width: 0; }
+}
