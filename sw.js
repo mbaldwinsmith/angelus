@@ -1,11 +1,11 @@
 // sw.js — Service Worker for offline support and background bells
 
-const CACHE = 'angelus-v9';
+const CACHE = 'angelus-v10';
 const ASSETS = [
   './',
   './index.html',
   './style.css?v=7',
-  './app.js?v=7',
+  './app.js?v=8',
   './prayers.js?v=7',
   './streaks.js?v=7',
   './notifications.js?v=7',

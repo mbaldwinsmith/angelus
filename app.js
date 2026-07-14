@@ -157,7 +157,13 @@ function renderHeader() {
 // ── Controls bar ───────────────────────────────────
 function renderControls() {
   let el = $('controls-bar');
-  if (!el) { el = document.createElement('div'); el.id = 'controls-bar'; el.className = 'controls'; app.appendChild(el); }
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'controls-bar';
+    el.className = 'controls';
+    el.addEventListener('click', e => e.stopPropagation());
+    app.appendChild(el);
+  }
   const audioBtn = audioSupported()
     ? `<button class="icon-btn${state.audioOn ? ' active' : ''}" id="btn-audio" title="${state.audioOn ? 'Stop narration' : 'Read prayer aloud'}" aria-label="${state.audioOn ? 'Stop narration' : 'Read prayer aloud'}">${state.audioOn ? ICONS.stop : ICONS.audio}</button>`
     : '';
